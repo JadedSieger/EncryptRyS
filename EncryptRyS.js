@@ -21,11 +21,15 @@ client.on('ready',() =>{
     client.user.setActivity("Carbonated Love",  {type: ActivityType.Streaming});
 });
 
-client.on("messageCreate", async (message) => {
+
+client.on('messageCreate', async (message) => {
     if (message.author.bot || !message.content.startsWith(prefix)) return;
 
     // Extract command and arguments properly
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const argsMatch = message.content.slice(prefix.length).trim().match(/(?:"([^"]+)")|(?:'([^']+)')|([^\s]+)/g);
+    if (!argsMatch) return;
+    const args = argsMatch.map(arg => arg.replace(/^"|"$|^'|'$/g, ''));
+    
     const command = args.shift().toLowerCase(); // Extract command name
 
     let result = null;
@@ -34,7 +38,9 @@ client.on("messageCreate", async (message) => {
         result = help(args[0], message);
     } else if (command === "genpass") {
         let length = parseInt(args[0]);
-        if (isNaN(length) || length <= 0) length = 12; // Default to 12 if not specified
+        if (isNaN(length) || length <= 0) {
+            length = 12; // Default to 12 if not specified
+        }
         result = securePassword(length);
     } else if (command === "encrypt" || command === "decrypt") {
         if (args.length < 2) {
@@ -42,7 +48,11 @@ client.on("messageCreate", async (message) => {
         }
 
         const [value, method, passkey] = args;
-        result = command === "encrypt" ? encrypt(value, method, passkey) : decrypt(value, method, passkey);
+        if (command === "encrypt") {
+            result = encrypt(value, method, passkey);
+        } else {
+            result = decrypt(value, method, passkey);
+        }
     } else if (command === "morse") {
         if (args.length < 2) {
             return message.reply("Usage: `rys>morse <encode/decode> <text>`");
@@ -57,21 +67,21 @@ client.on("messageCreate", async (message) => {
         } else {
             result = "Invalid mode! Use `encode` or `decode`.";
         }
-    } else if (command === "asc-bin_conv"){
-        if(args.length < 2){
+    } else if (command === "asc-bin_conv") {
+        if (args.length < 2) {
             return message.reply("Usage: `rys>asc-bin_conv <asc-bin/bin-asc> <text>");
         }
         const mode = args.shift().toLowerCase();
         const text = args.join(' ');
 
-        if(mode === "asc-bin"){
+        if (mode === "asc-bin") {
             result = asciiToBinary(text);
-        } else if(mode === "bin-asc"){
+        } else if (mode === "bin-asc") {
             result = binaryToAscii(text);
-        } else{
-            result = "Invalid mode."
+        } else {
+            result = "Invalid mode.";
         }
-    } else if(command === "userinfo"){
+    } else if (command === "userinfo") {
         await userInfoCommand(message);
     }
 
@@ -85,6 +95,7 @@ client.on("messageCreate", async (message) => {
     }
     console.log(message);
 });
+
 
 
 function encrypt(value, method, passkey = "N/A") {
