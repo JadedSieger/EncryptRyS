@@ -284,7 +284,7 @@ const allowedUsers = process.env.ownerID;
 
 if(!allowedUsers.includes(message.author.id)){
     return message.reply("You do not have permission to use this command.");
-
+        }
 
         try{
             const code = args.join(" ");
@@ -306,7 +306,7 @@ if(!allowedUsers.includes(message.author.id)){
             console.log("Error: ", error);
             message.channel.send(`\`\`\`js\nError ${error.message}\n\`\`\``)
         }
-    }
+    
 }
 
 client.login(process.env.token);
