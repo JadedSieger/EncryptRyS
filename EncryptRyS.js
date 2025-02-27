@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
 const crypto = require('crypto');
 const { EmbedBuilder } = require('@discordjs/builders');
+const { inspect } = require("util");
 
 const prefix = process.env.prefix;
 
@@ -178,11 +179,11 @@ function help(command, message) {
             .setTitle('HiRys, It\'s EncryptRyS!')
             .setDescription('These are my current version\'s commands:')
             .addFields(
-                { name: 'Encrypt', value: '`rys>encrypt <text> <method> <passkey (optional)>`' },
+                { name: 'Encrypt', value: '`rys>encrypt "<text>" <method> <passkey (optional)>`' },
                 { name: 'Methods', value: '`sha256`, `md5`, `aes`, `base64`, `rot13`, `hex`' },
-                { name: 'Decrypt', value: '`rys>decrypt <text> <method> <passkey (if needed)>`' },
-                { name: 'Methods', value: '`sha256`, `md5`, `aes`, `base64`, `rot13`, `hex`' },
-                { name: 'GeneratePassword', value: '`rys>genPass <length>(will default to 12 when no input is given.`'},
+                { name: 'Decrypt', value: '`rys>decrypt "<text>" <method> <passkey (if needed)>`' },
+                { name: 'Methods', value: '`aes`, `base64`, `rot13`, `hex`' },
+                { name: 'GeneratePassword', value: '`rys>genPass <length>(will default to 12 when no input is given.)`'},
                 { name: 'Morse', value: '`rys>morse <type> <value>`'},
                 { name: 'Morse_types', value: '`encode`/`decode`'},
                 { name: 'Ascii-Binary', value: '`rys>asc-bin_conv <type> <value>`'},
@@ -275,6 +276,36 @@ async function userInfoCommand(message) {
     } catch (error) {
         console.error("Error fetching user info:", error);
         message.reply("There was an error retrieving user info.");
+    }
+}
+
+async function djsEvaluate(message, args){
+const allowedUsers = process.env.ownerID;
+
+if(!allowedUsers.includes(message.author.id)){
+    return message.reply("You do not have permission to use this command.");
+
+
+        try{
+            const code = args.join(" ");
+
+            if(!code) return message.reply("Please provide code.");
+
+
+            let result = eval(code);
+
+
+            if(result instanceof Promise) result = await result;
+
+            let output = inspect(result, {depth : 1});
+
+            output = output.length > 1900 ? output.slice(0,1900) + "..." : output;
+
+            message.channel.send(`\`\`\`js\n${output}\n\`\`\``);
+        }catch(error){
+            console.log("Error: ", error);
+            message.channel.send(`\`\`\`js\nError ${error.message}\n\`\`\``)
+        }
     }
 }
 
