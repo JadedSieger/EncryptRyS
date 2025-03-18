@@ -1,6 +1,6 @@
 # EncryptRyS
 
-EncryptRyS was an idea I had while programming Lieserl Einstein and Beelzebul-AI. A bot with a large variety of tools mainly focusing on making encryption, decryption, and other forms of tools accessible to the common discord user.
+EncryptRyS was an idea I had while programming Lieserl Einstein and Karelia-AI. A bot with a large variety of tools mainly focusing on making encryption, decryption, and other forms of tools accessible to the common discord user.
 
 ### Requirements
 - latest version of node.js
@@ -20,13 +20,15 @@ EncryptRyS was an idea I had while programming Lieserl Einstein and Beelzebul-AI
 ```
 prefix = prefix
 bot_token = bot_token
+guildId = guildID
+clientId = clientID
 ```
 
 This is incredibly helpful for making your projects secure, especially when using hosting, or ***uploading your random shenanigans on github*** *(Yes, I'm staring at myself.)*
 
 4. Setting up
 
-There should be no setting up required, just dive in with rys>help or your prefix of choice!
+There should be no setting up required, just dive in with rys>help or your prefix of choice! 
 
 ### Initialization 
 Running with an IDE is preferred. However, if you want to run from the Command Line, navigate to your target location with your copy of index.js with `cd <path>`, before running `node index.js`
