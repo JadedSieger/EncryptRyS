@@ -1,6 +1,23 @@
 const { PollBuilder } = require('@discordjs/builders');
 const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
 
+const permissionMap = {
+    'ADMINISTRATOR': PermissionsBitField.Flags.Administrator,
+    'MANAGE_ROLES': PermissionsBitField.Flags.ManageRoles,
+    'MANAGE_MESSAGES': PermissionsBitField.Flags.ManageMessages,
+    'KICK_MEMBERS': PermissionsBitField.Flags.KickMembers,
+    'BAN_MEMBERS': PermissionsBitField.Flags.BanMembers,
+    'VIEW_CHANNEL': PermissionsBitField.Flags.ViewChannel,
+    'SEND_MESSAGES': PermissionsBitField.Flags.SendMessages,
+    'MANAGE_CHANNELS': PermissionsBitField.Flags.ManageChannels,
+    'MENTION_EVERYONE': PermissionsBitField.Flags.MentionEveryone,
+    'USE_EXTERNAL_EMOJIS': PermissionsBitField.Flags.UseExternalEmojis,
+    'CHANGE_NICKNAME': PermissionsBitField.Flags.ChangeNickname,
+    'MANAGE_NICKNAMES': PermissionsBitField.Flags.ManageNicknames,
+    'MANAGE_WEBHOOKS': PermissionsBitField.Flags.ManageWebhooks,
+    'MANAGE_GUILD': PermissionsBitField.Flags.ManageGuild,
+};
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('createPoll')
