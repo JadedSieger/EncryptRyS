@@ -1,5 +1,5 @@
 const { PollBuilder } = require('@discordjs/builders');
-const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
 const permissionMap = {
     'ADMINISTRATOR': PermissionsBitField.Flags.Administrator,
@@ -21,7 +21,7 @@ const permissionMap = {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('createPoll')
-        .setDescription('Create a poll.')
+        .setDescription('Create a poll with multiple answers.')
         .addStringOption(option =>
             option.setName('title')
                 .setDescription('Title of the Poll.')
@@ -31,12 +31,13 @@ module.exports = {
                 .setDescription('Number of choices for the poll.')
                 .setRequired(true)
                 .setMinValue(2)
-                .setMaxValue(10)), // Limit to 10 choices to avoid spam
+                .setMaxValue(10)), // Limit choices to 10 for simplicity
 
     async execute(interaction) {
         const title = interaction.options.getString('title');
         const choicesCount = interaction.options.getInteger('choices_count');
 
+        // Validate choices count
         if (choicesCount < 2 || choicesCount > 10) {
             return interaction.reply({
                 content: 'Please provide a number between 2 and 10 for the choices.',
@@ -44,22 +45,22 @@ module.exports = {
             });
         }
 
-        // Dynamically add options for choices
-        let pollChoices = [];
+        // Dynamically gather all choices
+        let answers = [];
         for (let i = 1; i <= choicesCount; i++) {
             const choice = interaction.options.getString(`choice_${i}`);
             if (choice) {
-                pollChoices.push(choice);
+                answers.push({ text: choice });
             }
         }
 
-        const poll = new PollBuilder()
-            .setQuestion(title);
+        // Create the poll
+        const poll = new PollBuilder().setQuestion(title);
 
-        // Add all the choices to the poll
-        pollChoices.forEach(choice => poll.addChoice(choice));
+        // Using rest parameters to add answers dynamically
+        poll.addAnswers(...answers);
 
-        // Send the poll to the channel
+        // Send the poll message
         await interaction.reply({
             content: `**Poll:** ${title}`,
             components: [poll.toJSON()],
