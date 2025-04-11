@@ -1,4 +1,11 @@
 {
+  "name": "EncryptRyS",
+  "version": "1.0.0",
+  "description": "Bot that is based on IRyS from Hololive English Promise. Provides multiple tools including encryption, polling and many more.",
+  "main": "EncryptRyS.js",
+  "scripts": {
+    "start": "node EncryptRyS.js"
+  },
   "dependencies": {
     "crypto": "^1.0.1",
     "discord.js": "^14.18.0",
